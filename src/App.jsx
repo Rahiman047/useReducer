@@ -10,30 +10,44 @@ const userData = [
   { name: "Jane", id: 5 },
 ];
 
+const CLEAR_LIST = "CLEAR_LIST";
+const RESET_LIST = "RESET_LIST";
+const REMOVE_ITEM = "REMOVE_ITEM";
+
 const defaultState = {
   people: userData,
 };
 
-const reducer = () => {};
+const reducer = (state, action) => {
+  if (action.type === CLEAR_LIST) {
+    return { ...state, people: [] };
+  }
+  if (action.type === RESET_LIST) {
+    return { ...state, people: userData };
+  }
+  if (action.type === REMOVE_ITEM) {
+    const newUserData = state.people.filter(
+      (eachUser) => eachUser.id !== action.payload
+    );
+    return { ...state, people: newUserData };
+  }
+
+  throw new Error(`No Matching ${action.type} - action type`);
+};
 
 function App() {
   const [state, dispatch] = useReducer(reducer, defaultState);
 
-  // const [data, setData] = useState(userData);
-
   const removeParticularUser = (id) => {
-    // const newData = data.filter((eachData) => {
-    //   return eachData.id !== id;
-    // });
-    // setData(newData);
+    dispatch({ type: REMOVE_ITEM, payload: id });
   };
 
   const clearAllUsers = () => {
-    // setData([]);
+    dispatch({ type: CLEAR_LIST });
   };
 
   const resetUsers = () => {
-    // setData(userData);
+    dispatch({ type: RESET_LIST });
   };
 
   return (
